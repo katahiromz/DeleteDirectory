@@ -11,6 +11,12 @@
     #include <windows.h>
 #endif
 
+#ifdef __cplusplus
+    #include <cassert>
+#else
+    #include <assert.h>
+#endif
+
 #ifdef UNICODE
     #define DeleteDirectory DeleteDirectoryW
 #else
@@ -26,7 +32,10 @@ __inline BOOL WINAPI DeleteDirectory(LPCTSTR dir)
 
     GetCurrentDirectory(MAX_PATH, dir_old);
     if (!SetCurrentDirectory(dir))
+    {
+        assert(0);
         return FALSE;
+    }
 
     hFind = FindFirstFile(TEXT("*"), &find);
     if (hFind != INVALID_HANDLE_VALUE)
@@ -48,7 +57,10 @@ __inline BOOL WINAPI DeleteDirectory(LPCTSTR dir)
                 else
                 {
                     SetFileAttributes(find.cFileName, FILE_ATTRIBUTE_NORMAL);
-                    DeleteFile(find.cFileName);
+                    if (!DeleteFile(find.cFileName))
+                    {
+                        assert(0);
+                    }
                 }
             }
         } while(FindNextFile(hFind, &find));
@@ -57,7 +69,12 @@ __inline BOOL WINAPI DeleteDirectory(LPCTSTR dir)
     SetCurrentDirectory(dir_old);
 
     SetFileAttributes(dir, FILE_ATTRIBUTE_DIRECTORY);
-    return RemoveDirectory(dir);
+    if (!RemoveDirectory(dir))
+    {
+        assert(0);
+        return FALSE;
+    }
+    return TRUE;
 }
 
 #endif  /* ndef DeleteDirectory */
