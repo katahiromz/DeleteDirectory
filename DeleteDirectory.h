@@ -30,18 +30,25 @@ __inline BOOL WINAPI DeleteDirectory(LPCTSTR dir)
     WIN32_FIND_DATA find;
     LPTSTR pch;
 
+    /* get the current directory */
     GetCurrentDirectory(MAX_PATH, dir_old);
+
+    /* move to the directory */
     if (!SetCurrentDirectory(dir))
     {
+        /* failed to move the current directory */
         assert(0);
         return FALSE;
     }
 
+    /* get the filesystem item list */
     hFind = FindFirstFile(TEXT("*"), &find);
     if (hFind != INVALID_HANDLE_VALUE)
     {
+        /* for each item */
         do
         {
+            /* check the item name */
             pch = find.cFileName;
             if (pch[0] == TEXT('.') && 
                 (pch[1] == 0 || (pch[1] == TEXT('.') && pch[2] == 0)))
@@ -52,28 +59,46 @@ __inline BOOL WINAPI DeleteDirectory(LPCTSTR dir)
             {
                 if (find.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
                 {
+                    /* a directory */
                     DeleteDirectory(find.cFileName);
                 }
-                else
+                else    /* a file */
                 {
+                    /* remove the read-only attribute */
                     SetFileAttributes(find.cFileName, FILE_ATTRIBUTE_NORMAL);
+
                     if (!DeleteFile(find.cFileName))
                     {
+                        /* failed to delete a file */
                         assert(0);
                     }
                 }
             }
-        } while(FindNextFile(hFind, &find));
+        } while (FindNextFile(hFind, &find));   /* get the next */
+
+        /* close the list */
         FindClose(hFind);
     }
+    else
+    {
+        /* failed to get the list */
+        assert(0);
+    }
+
+    /* back to the saved directory */
     SetCurrentDirectory(dir_old);
 
+    /* remove the read-only attribute */
     SetFileAttributes(dir, FILE_ATTRIBUTE_DIRECTORY);
+
+    /* remove the directory */
     if (!RemoveDirectory(dir))
     {
+        /* failed to remove a directory (maybe not empty) */
         assert(0);
         return FALSE;
     }
+
     return TRUE;
 }
 
