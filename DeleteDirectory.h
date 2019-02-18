@@ -17,7 +17,15 @@
     #define DeleteDirectory DeleteDirectoryA
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* recursively deletes a directory tree */
 BOOL WINAPI DeleteDirectory(LPCTSTR dir);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif  /* ndef DeleteDirectory */
