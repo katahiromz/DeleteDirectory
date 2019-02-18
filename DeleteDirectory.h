@@ -11,12 +11,6 @@
     #include <windows.h>
 #endif
 
-#ifdef __cplusplus
-    #include <cassert>
-#else
-    #include <assert.h>
-#endif
-
 #ifdef UNICODE
     #define DeleteDirectory DeleteDirectoryW
 #else

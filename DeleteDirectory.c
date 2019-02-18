@@ -4,6 +4,12 @@
 
 #include "DeleteDirectory.h"
 
+#ifdef __cplusplus
+    #include <cassert>
+#else
+    #include <assert.h>
+#endif
+
 /* recursively deletes a directory tree */
 BOOL WINAPI DeleteDirectory(LPCTSTR dir)
 {
