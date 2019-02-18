@@ -10,6 +10,10 @@
     #include <assert.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* recursively deletes a directory tree */
 BOOL WINAPI DeleteDirectory(LPCTSTR dir)
 {
@@ -89,3 +93,7 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
 
     return TRUE;    /* success */
 }
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
