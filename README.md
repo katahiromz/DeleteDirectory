@@ -6,3 +6,5 @@ This DeleteDirectory function deletes a directory in Win32 C/C++.
 #include "DeleteDirectory.h"
 __inline BOOL WINAPI DeleteDirectory(LPCTSTR dir);
 ```
+
+License: MIT
