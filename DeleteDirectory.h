@@ -23,6 +23,7 @@
     #define DeleteDirectory DeleteDirectoryA
 #endif
 
+/* recursively deletes a directory tree */
 __inline BOOL WINAPI DeleteDirectory(LPCTSTR dir)
 {
     TCHAR dir_old[MAX_PATH];
