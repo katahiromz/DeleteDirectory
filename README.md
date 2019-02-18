@@ -1,4 +1,4 @@
-# DeleteDirectory --- delete directory in C/C++
+# DeleteDirectory --- delete directory in Win32 C/C++
 
 ```c
 #include "DeleteDirectory.h"
