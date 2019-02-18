@@ -87,5 +87,5 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
         return FALSE;
     }
 
-    return TRUE;
+    return TRUE;    /* success */
 }
