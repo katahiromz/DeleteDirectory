@@ -41,6 +41,10 @@ int main(void)
         std::cout << "Type Enter key" << std::endl;
         getchar();
     }
+    else
+    {
+        Sleep(500);
+    }
 
     std::vector<tstring> items;
     BOOL ret1 = DirItemList(items, TEXT("a1"));
