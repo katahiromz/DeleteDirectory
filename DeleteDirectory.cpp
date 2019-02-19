@@ -5,7 +5,6 @@
 #include "DeleteDirectory.h"
 
 #include <cassert>
-#include <algorithm>
 #include <shlwapi.h>
 #ifndef NO_STRSAFE
     #include <strsafe.h>

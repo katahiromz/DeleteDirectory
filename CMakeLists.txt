@@ -68,7 +68,7 @@ endif()
 
 option(USE_CXX "Use C++" ON)
 
-if (USE_CXX AND FALSE)
+if (USE_CXX)
     enable_language(CXX)
 
     # libDeleteDirectoryA.a
