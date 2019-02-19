@@ -1,4 +1,4 @@
-// DeleteDirectory.c --- delete directory in C/C++
+// DeleteDirectory.cpp --- delete directory in C/C++
 // Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.com>.
 // This file is public domain software.
 
