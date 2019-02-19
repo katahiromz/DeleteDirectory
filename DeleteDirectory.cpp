@@ -138,47 +138,53 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
     }
 
     // get the directory list
-    std::vector<tstring> paths;
-    if (!DirList(paths, dir))
+    try
     {
-        // failed
-        assert(0);
-        return FALSE;
+        std::vector<tstring> paths;
+        if (!DirList(paths, dir))
+        {
+            // failed
+            assert(0);
+            return FALSE;
+        }
+
+        // enumerate paths in reverse order
+        for (size_t i = paths.size(); i--; )
+        {
+            tstring& path = paths[i];
+            const TCHAR *psz = path.c_str();
+
+            // is it a directory?
+            if (PathIsDirectory(psz))
+            {
+                /* remove the read-only attribute */
+                SetFileAttributes(psz, FILE_ATTRIBUTE_DIRECTORY);
+
+                // remove a directory
+                if (!RemoveDirectory(psz))
+                {
+                    // unable to remove a directory
+                    assert(0);
+                    return FALSE;
+                }
+            }
+            else
+            {
+                // remove the read-only attribute
+                SetFileAttributes(psz, FILE_ATTRIBUTE_NORMAL);
+
+                // delete a file
+                if (!DeleteFile(psz))
+                {
+                    // unable to delete a file
+                    assert(0);
+                    return FALSE;
+                }
+            }
+        }
     }
-
-    // enumerate paths in reverse order
-    for (size_t i = paths.size(); i--; )
+    catch (...)
     {
-        tstring& path = paths[i];
-        const TCHAR *psz = path.c_str();
-
-        // is it a directory?
-        if (PathIsDirectory(psz))
-        {
-            /* remove the read-only attribute */
-            SetFileAttributes(psz, FILE_ATTRIBUTE_DIRECTORY);
-
-            // remove a directory
-            if (!RemoveDirectory(psz))
-            {
-                // unable to remove a directory
-                assert(0);
-                return FALSE;
-            }
-        }
-        else
-        {
-            // remove the read-only attribute
-            SetFileAttributes(psz, FILE_ATTRIBUTE_NORMAL);
-
-            // delete a file
-            if (!DeleteFile(psz))
-            {
-                // unable to delete a file
-                assert(0);
-                return FALSE;
-            }
-        }
     }
 
     return !PathFileExists(dir);
