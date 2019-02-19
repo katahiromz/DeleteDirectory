@@ -34,15 +34,11 @@ BOOL WINAPI DeleteDirectoryW(LPCWSTR dir);
     #include <string>
     #include <vector>
 
-    #ifdef UNICODE
-        typedef std::wstring tstring;
-    #else
-        typedef std::string tstring;
-    #endif
-
+    /* get the item list */
     BOOL DirItemListA(std::vector<std::string>& items, LPCSTR dir);
     BOOL DirItemListW(std::vector<std::wstring>& items, LPCWSTR dir);
 
+    /* get the directory list */
     BOOL DirListA(std::vector<std::string>& paths, LPCSTR item);
     BOOL DirListW(std::vector<std::wstring>& paths, LPCWSTR item);
 #endif

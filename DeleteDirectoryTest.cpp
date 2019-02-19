@@ -7,6 +7,12 @@
 #include <cassert>
 #include <algorithm>    /* for std::sort */
 
+#ifdef UNICODE
+    typedef std::wstring tstring;
+#else
+    typedef std::string tstring;
+#endif
+
 int main(void)
 {
     using namespace std;
