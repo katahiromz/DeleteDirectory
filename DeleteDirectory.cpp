@@ -41,34 +41,26 @@ BOOL WINAPI DirItemList(std::vector<tstring>& items, LPCTSTR dir)
         return FALSE;
     }
 
-    BOOL bOK = TRUE;
-    try
+    // for each item
+    do
     {
-        // for each item
-        do
+        LPTSTR pch = find.cFileName;
+        if (pch[0] == TEXT('.') && 
+            (pch[1] == 0 || (pch[1] == TEXT('.') && pch[2] == 0)))
         {
-            LPTSTR pch = find.cFileName;
-            if (pch[0] == TEXT('.') && 
-                (pch[1] == 0 || (pch[1] == TEXT('.') && pch[2] == 0)))
-            {
-                // "." or ".."
-            }
-            else
-            {
-                // add it
-                items.push_back(find.cFileName);
-            }
-        } while (FindNextFile(hFind, &find));   // go next
-    }
-    catch (...)
-    {
-        bOK = FALSE;
-    }
+            // "." or ".."
+        }
+        else
+        {
+            // add it
+            items.push_back(find.cFileName);
+        }
+    } while (FindNextFile(hFind, &find));   // go next
 
     // end enumerating
     FindClose(hFind);
 
-    return bOK;
+    return TRUE;
 }
 
 /* get the directory list */
@@ -81,45 +73,37 @@ BOOL WINAPI DirList(std::vector<tstring>& paths, LPCTSTR item)
         return FALSE;
     }
 
-    BOOL bOK = TRUE;
-    try
+    size_t i = paths.size(), k;
+    paths.push_back(item);
+
+    tstring path;
+    TCHAR szPath[MAX_PATH];
+    for (; i < paths.size(); ++i)
     {
-        size_t i = paths.size(), k;
-        paths.push_back(item);
+        path = paths[i];
 
-        tstring path;
-        TCHAR szPath[MAX_PATH];
-        for (; i < paths.size(); ++i)
+        // not directory?
+        if (!PathIsDirectory(path.c_str()))
+            continue;
+
+        // get the items of the path
+        std::vector<tstring> items;
+        DirItemList(items, path.c_str());
+
+        // add the items with fixing as path
+        for (k = 0; k < items.size(); ++k)
         {
-            path = paths[i];
-
-            // not directory?
-            if (!PathIsDirectory(path.c_str()))
-                continue;
-
-            // get the items of the path
-            std::vector<tstring> items;
-            DirItemList(items, path.c_str());
-
-            // add the items with fixing as path
-            for (k = 0; k < items.size(); ++k)
-            {
 #ifdef NO_STRSAFE
-                lstrcpyn(szPath, path.c_str(), ARRAYSIZE(szPath));
+            lstrcpyn(szPath, path.c_str(), ARRAYSIZE(szPath));
 #else
-                StringCbCopy(szPath, sizeof(szPath), path.c_str());
+            StringCbCopy(szPath, sizeof(szPath), path.c_str());
 #endif
-                PathAppend(szPath, items[k].c_str());
-                paths.push_back(szPath);
-            }
+            PathAppend(szPath, items[k].c_str());
+            paths.push_back(szPath);
         }
     }
-    catch (...)
-    {
-        bOK = FALSE;
-    }
 
-    return bOK;
+    return TRUE;
 }
 
 #ifdef __cplusplus
@@ -138,53 +122,47 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
     }
 
     // get the directory list
-    try
+    std::vector<tstring> paths;
+    if (!DirList(paths, dir))
     {
-        std::vector<tstring> paths;
-        if (!DirList(paths, dir))
-        {
-            // failed
-            assert(0);
-            return FALSE;
-        }
-
-        // enumerate paths in reverse order
-        for (size_t i = paths.size(); i--; )
-        {
-            tstring& path = paths[i];
-            const TCHAR *psz = path.c_str();
-
-            // is it a directory?
-            if (PathIsDirectory(psz))
-            {
-                /* remove the read-only attribute */
-                SetFileAttributes(psz, FILE_ATTRIBUTE_DIRECTORY);
-
-                // remove a directory
-                if (!RemoveDirectory(psz))
-                {
-                    // unable to remove a directory
-                    assert(0);
-                    return FALSE;
-                }
-            }
-            else
-            {
-                // remove the read-only attribute
-                SetFileAttributes(psz, FILE_ATTRIBUTE_NORMAL);
-
-                // delete a file
-                if (!DeleteFile(psz))
-                {
-                    // unable to delete a file
-                    assert(0);
-                    return FALSE;
-                }
-            }
-        }
+        // failed
+        assert(0);
+        return FALSE;
     }
-    catch (...)
+
+    // enumerate paths in reverse order
+    for (size_t i = paths.size(); i--; )
     {
+        const tstring& path = paths[i];
+        const TCHAR *psz = path.c_str();
+
+        // is it a directory?
+        if (PathIsDirectory(psz))
+        {
+            /* remove the read-only attribute */
+            SetFileAttributes(psz, FILE_ATTRIBUTE_DIRECTORY);
+
+            // remove a directory
+            if (!RemoveDirectory(psz))
+            {
+                // unable to remove a directory
+                assert(0);
+                return FALSE;
+            }
+        }
+        else
+        {
+            // remove the read-only attribute
+            SetFileAttributes(psz, FILE_ATTRIBUTE_NORMAL);
+
+            // delete a file
+            if (!DeleteFile(psz))
+            {
+                // unable to delete a file
+                assert(0);
+                return FALSE;
+            }
+        }
     }
 
     return !PathFileExists(dir);
