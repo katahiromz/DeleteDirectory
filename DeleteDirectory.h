@@ -35,12 +35,12 @@ BOOL WINAPI DeleteDirectoryW(LPCWSTR dir);
     #include <vector>
 
     /* get the item list */
-    BOOL DirItemListA(std::vector<std::string>& items, LPCSTR dir);
-    BOOL DirItemListW(std::vector<std::wstring>& items, LPCWSTR dir);
+    BOOL WINAPI DirItemListA(std::vector<std::string>& items, LPCSTR dir);
+    BOOL WINAPI DirItemListW(std::vector<std::wstring>& items, LPCWSTR dir);
 
     /* get the directory list */
-    BOOL DirListA(std::vector<std::string>& paths, LPCSTR item);
-    BOOL DirListW(std::vector<std::wstring>& paths, LPCWSTR item);
+    BOOL WINAPI DirListA(std::vector<std::string>& paths, LPCSTR item);
+    BOOL WINAPI DirListW(std::vector<std::wstring>& paths, LPCWSTR item);
 #endif  /* C++ */
 
 #endif  /* ndef DELETE_DIRECTORY_H_ */

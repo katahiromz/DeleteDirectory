@@ -21,7 +21,7 @@
 #endif
 
 /* get the item list */
-BOOL DirItemList(std::vector<tstring>& items, LPCTSTR dir)
+BOOL WINAPI DirItemList(std::vector<tstring>& items, LPCTSTR dir)
 {
     // create the wildcard specifier from dir
     TCHAR szPath[MAX_PATH];
@@ -60,7 +60,7 @@ BOOL DirItemList(std::vector<tstring>& items, LPCTSTR dir)
 }
 
 /* get the directory list */
-BOOL DirList(std::vector<tstring>& paths, LPCTSTR item)
+BOOL WINAPI DirList(std::vector<tstring>& paths, LPCTSTR item)
 {
     if (!PathFileExists(item))
     {
