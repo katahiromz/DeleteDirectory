@@ -76,6 +76,10 @@ endif()
 if (USE_CXX)
     enable_language(CXX)
 
+    if (MSVC)
+        string(APPEND CMAKE_CXX_FLAGS " /EHsc ")
+    endif()
+
     # libDeleteDirectoryA.a
     add_library(DeleteDirectoryA STATIC DeleteDirectory.cpp)
     target_compile_definitions(DeleteDirectoryA PRIVATE -DMBCS -D_MBCS)

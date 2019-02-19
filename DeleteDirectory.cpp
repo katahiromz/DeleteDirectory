@@ -108,61 +108,76 @@ BOOL WINAPI DirList(container_type& paths, LPCTSTR item)
     return TRUE;
 }
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* deletes a directory tree */
-BOOL WINAPI DeleteDirectory(LPCTSTR dir)
+BOOL WINAPI DeleteDirectory(LPCTSTR dir) M_NOEXCEPT
 {
-    // dir must be a directory
-    if (!PathIsDirectory(dir))
+    try
     {
-        // not a directory
-        assert(0);
-        return FALSE;
-    }
-
-    // get the directory list
-    container_type paths;
-    if (!DirList(paths, dir))
-    {
-        // failed
-        assert(0);
-        return FALSE;
-    }
-
-    // enumerate paths in reverse order
-    container_type::const_reverse_iterator rit, rend = paths.rend();
-    for (rit = paths.rbegin(); rit != rend; ++rit)
-    {
-        const tstring& path = *rit;
-        const TCHAR *psz = path.c_str();
-
-        // is it a directory?
-        if (PathIsDirectory(psz))
+        // dir must be a directory
+        if (!PathIsDirectory(dir))
         {
-            /* remove the read-only attribute */
-            SetFileAttributes(psz, FILE_ATTRIBUTE_DIRECTORY);
+            // not a directory
+            assert(0);
+            return FALSE;
+        }
 
-            // remove a directory
-            if (!RemoveDirectory(psz))
+        // get the directory list
+        container_type paths;
+        if (!DirList(paths, dir))
+        {
+            // failed
+            assert(0);
+            return FALSE;
+        }
+
+        // enumerate paths in reverse order
+        container_type::const_reverse_iterator rit, rend = paths.rend();
+        for (rit = paths.rbegin(); rit != rend; ++rit)
+        {
+            const tstring& path = *rit;
+            const TCHAR *psz = path.c_str();
+
+            // is it a directory?
+            if (PathIsDirectory(psz))
             {
-                // unable to remove a directory
-                assert(0);
-                return FALSE;
+                /* remove the read-only attribute */
+                SetFileAttributes(psz, FILE_ATTRIBUTE_DIRECTORY);
+
+                // remove a directory
+                if (!RemoveDirectory(psz))
+                {
+                    // unable to remove a directory
+                    assert(0);
+                    return FALSE;
+                }
+            }
+            else
+            {
+                // remove the read-only attribute
+                SetFileAttributes(psz, FILE_ATTRIBUTE_NORMAL);
+
+                // delete a file
+                if (!DeleteFile(psz))
+                {
+                    // unable to delete a file
+                    assert(0);
+                    return FALSE;
+                }
             }
         }
-        else
-        {
-            // remove the read-only attribute
-            SetFileAttributes(psz, FILE_ATTRIBUTE_NORMAL);
-
-            // delete a file
-            if (!DeleteFile(psz))
-            {
-                // unable to delete a file
-                assert(0);
-                return FALSE;
-            }
-        }
+    }
+    catch (...)
+    {
+        return FALSE;
     }
 
     return !PathFileExists(dir);
 }
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
