@@ -82,12 +82,12 @@ if (USE_CXX)
 
     # libDeleteDirectoryA.a
     add_library(DeleteDirectoryA STATIC DeleteDirectory.cpp)
-    target_compile_definitions(DeleteDirectoryA PRIVATE -DMBCS -D_MBCS)
+    set_target_properties(DeleteDirectoryA PROPERTIES COMPILE_FLAGS "-DMBCS -D_MBCS")
     target_link_libraries(DeleteDirectoryA PRIVATE shlwapi)
 
     # libDeleteDirectoryW.a
     add_library(DeleteDirectoryW STATIC DeleteDirectory.cpp)
-    target_compile_definitions(DeleteDirectoryW PRIVATE -DUNICODE -D_UNICODE)
+    set_target_properties(DeleteDirectoryW PROPERTIES COMPILE_FLAGS "-DUNICODE -D_UNICODE")
     target_link_libraries(DeleteDirectoryW PRIVATE shlwapi)
 
     # libDeleteDirectory.a
@@ -96,22 +96,22 @@ if (USE_CXX)
 
     # DeleteDirectoryTestA.exe
     add_executable(DeleteDirectoryTestA DeleteDirectoryTest.cpp)
+    set_target_properties(DeleteDirectoryTestA PROPERTIES COMPILE_FLAGS "-DMBCS -D_MBCS")
     target_link_libraries(DeleteDirectoryTestA PRIVATE DeleteDirectory)
-    target_compile_definitions(DeleteDirectoryTestA PRIVATE -DMBCS -D_MBCS)
 
     # DeleteDirectoryTestW.exe
     add_executable(DeleteDirectoryTestW DeleteDirectoryTest.cpp)
+    set_target_properties(DeleteDirectoryTestW PROPERTIES COMPILE_FLAGS "-DUNICODE -D_UNICODE")
     target_link_libraries(DeleteDirectoryTestW PRIVATE DeleteDirectory)
-    target_compile_definitions(DeleteDirectoryTestW PRIVATE -DUNICODE -D_UNICODE)
 else()
     # libDeleteDirectoryA.a
     add_library(DeleteDirectoryA STATIC DeleteDirectory.c)
-    target_compile_definitions(DeleteDirectoryA PRIVATE -DMBCS -D_MBCS)
+    set_target_properties(DeleteDirectoryA PROPERTIES COMPILE_FLAGS "-DMBCS -D_MBCS")
     target_link_libraries(DeleteDirectoryA PRIVATE shlwapi)
 
     # libDeleteDirectoryW.a
     add_library(DeleteDirectoryW STATIC DeleteDirectory.c)
-    target_compile_definitions(DeleteDirectoryW PRIVATE -DUNICODE -D_UNICODE)
+    set_target_properties(DeleteDirectoryW PROPERTIES COMPILE_FLAGS "-DUNICODE -D_UNICODE")
     target_link_libraries(DeleteDirectoryW PRIVATE shlwapi)
 
     # libDeleteDirectory.a
@@ -120,13 +120,13 @@ else()
 
     # DeleteDirectoryTestA.exe
     add_executable(DeleteDirectoryTestA DeleteDirectoryTest.c)
+    set_target_properties(DeleteDirectoryTestA PROPERTIES COMPILE_FLAGS "-DMBCS -D_MBCS")
     target_link_libraries(DeleteDirectoryTestA PRIVATE DeleteDirectory)
-    target_compile_definitions(DeleteDirectoryTestA PRIVATE -DMBCS -D_MBCS)
 
     # DeleteDirectoryTestW.exe
     add_executable(DeleteDirectoryTestW DeleteDirectoryTest.c)
+    set_target_properties(DeleteDirectoryTestW PROPERTIES COMPILE_FLAGS "-DUNICODE -D_UNICODE")
     target_link_libraries(DeleteDirectoryTestW PRIVATE DeleteDirectory)
-    target_compile_definitions(DeleteDirectoryTestW PRIVATE -DUNICODE -D_UNICODE)
 endif()
 
 add_test(NAME DeleteDirectoryTestA COMMAND DeleteDirectoryTestA)
