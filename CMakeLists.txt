@@ -6,6 +6,13 @@
 # CMake minimum version
 cmake_minimum_required(VERSION 2.4)
 
+if (COMMAND cmake_policy)
+    cmake_policy(SET CMP0003 NEW)
+endif()
+
+# enable testing
+enable_testing()
+
 # project name and language
 project(DeleteDirectory C)
 
@@ -59,7 +66,62 @@ endif()
 
 ##############################################################################
 
-add_library(DeleteDirectory STATIC DeleteDirectory.c)
+option(USE_CXX "Use C++" ON)
+
+if (USE_CXX AND FALSE)
+    enable_language(CXX)
+
+    # libDeleteDirectoryA.a
+    add_library(DeleteDirectoryA STATIC DeleteDirectory.cpp)
+    target_compile_definitions(DeleteDirectoryA PRIVATE -DMBCS -D_MBCS)
+    target_link_libraries(DeleteDirectoryA PRIVATE shlwapi)
+
+    # libDeleteDirectoryW.a
+    add_library(DeleteDirectoryW STATIC DeleteDirectory.cpp)
+    target_compile_definitions(DeleteDirectoryW PRIVATE -DUNICODE -D_UNICODE)
+    target_link_libraries(DeleteDirectoryW PRIVATE shlwapi)
+
+    # libDeleteDirectory.a
+    add_library(DeleteDirectory STATIC empty.c)
+    target_link_libraries(DeleteDirectory PRIVATE DeleteDirectoryA DeleteDirectoryW)
+
+    # DeleteDirectoryTestA.exe
+    add_executable(DeleteDirectoryTestA DeleteDirectoryTest.cpp)
+    target_link_libraries(DeleteDirectoryTestA PRIVATE DeleteDirectoryA)
+    target_compile_definitions(DeleteDirectoryTestA PRIVATE -DMBCS -D_MBCS)
+
+    # DeleteDirectoryTestW.exe
+    add_executable(DeleteDirectoryTestW DeleteDirectoryTest.cpp)
+    target_link_libraries(DeleteDirectoryTestW PRIVATE DeleteDirectoryW)
+    target_compile_definitions(DeleteDirectoryTestW PRIVATE -DUNICODE -D_UNICODE)
+else()
+    # libDeleteDirectoryA.a
+    add_library(DeleteDirectoryA STATIC DeleteDirectory.c)
+    target_compile_definitions(DeleteDirectoryA PRIVATE -DMBCS -D_MBCS)
+    target_link_libraries(DeleteDirectoryA PRIVATE shlwapi)
+
+    # libDeleteDirectoryW.a
+    add_library(DeleteDirectoryW STATIC DeleteDirectory.c)
+    target_compile_definitions(DeleteDirectoryW PRIVATE -DUNICODE -D_UNICODE)
+    target_link_libraries(DeleteDirectoryW PRIVATE shlwapi)
+
+    # libDeleteDirectory.a
+    add_library(DeleteDirectory STATIC empty.c)
+    target_link_libraries(DeleteDirectory PRIVATE DeleteDirectoryA DeleteDirectoryW)
+
+    # DeleteDirectoryTestA.exe
+    add_executable(DeleteDirectoryTestA DeleteDirectoryTest.c)
+    target_link_libraries(DeleteDirectoryTestA PRIVATE DeleteDirectoryA)
+    target_compile_definitions(DeleteDirectoryTestA PRIVATE -DMBCS -D_MBCS)
+
+    # DeleteDirectoryTestW.exe
+    add_executable(DeleteDirectoryTestW DeleteDirectoryTest.c)
+    target_link_libraries(DeleteDirectoryTestW PRIVATE DeleteDirectoryW)
+    target_compile_definitions(DeleteDirectoryTestW PRIVATE -DUNICODE -D_UNICODE)
+endif()
+
+add_test(NAME DeleteDirectoryTestA COMMAND DeleteDirectoryTestA)
+add_test(NAME DeleteDirectoryTestW COMMAND DeleteDirectoryTestW)
 
 install(TARGETS DeleteDirectory DESTINATION lib)
 install(FILES DeleteDirectory.h DESTINATION include)
