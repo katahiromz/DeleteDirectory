@@ -15,13 +15,14 @@
 #else
     typedef std::string tstring;
 #endif
+typedef std::vector<tstring> container_type;
 
 #ifndef ARRAYSIZE
     #define ARRAYSIZE(array) (sizeof(array) / sizeof((array)[0]))
 #endif
 
 /* get the item list */
-BOOL WINAPI DirItemList(std::vector<tstring>& items, LPCTSTR dir)
+BOOL WINAPI DirItemList(container_type& items, LPCTSTR dir)
 {
     // create the wildcard specifier from dir
     TCHAR szPath[MAX_PATH];
@@ -64,7 +65,7 @@ BOOL WINAPI DirItemList(std::vector<tstring>& items, LPCTSTR dir)
 }
 
 /* get the directory list */
-BOOL WINAPI DirList(std::vector<tstring>& paths, LPCTSTR item)
+BOOL WINAPI DirList(container_type& paths, LPCTSTR item)
 {
     if (!PathFileExists(item))
     {
@@ -73,7 +74,7 @@ BOOL WINAPI DirList(std::vector<tstring>& paths, LPCTSTR item)
         return FALSE;
     }
 
-    size_t i = paths.size(), k;
+    size_t i = paths.size();
     paths.push_back(item);
 
     tstring path;
@@ -87,18 +88,19 @@ BOOL WINAPI DirList(std::vector<tstring>& paths, LPCTSTR item)
             continue;
 
         // get the items of the path
-        std::vector<tstring> items;
+        container_type items;
         DirItemList(items, path.c_str());
 
         // add the items with fixing as path
-        for (k = 0; k < items.size(); ++k)
+        container_type::const_iterator it, end = items.end();
+        for (it = items.begin(); it != end; ++it)
         {
 #ifdef NO_STRSAFE
             lstrcpyn(szPath, path.c_str(), ARRAYSIZE(szPath));
 #else
             StringCbCopy(szPath, sizeof(szPath), path.c_str());
 #endif
-            PathAppend(szPath, items[k].c_str());
+            PathAppend(szPath, it->c_str());
             paths.push_back(szPath);
         }
     }
@@ -122,7 +124,7 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
     }
 
     // get the directory list
-    std::vector<tstring> paths;
+    container_type paths;
     if (!DirList(paths, dir))
     {
         // failed
@@ -131,9 +133,10 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
     }
 
     // enumerate paths in reverse order
-    for (size_t i = paths.size(); i--; )
+    container_type::const_reverse_iterator rit, rend = paths.rend();
+    for (rit = paths.rbegin(); rit != rend; ++rit)
     {
-        const tstring& path = paths[i];
+        const tstring& path = *rit;
         const TCHAR *psz = path.c_str();
 
         // is it a directory?
