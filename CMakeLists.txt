@@ -103,11 +103,17 @@ if (USE_CXX)
     add_executable(DeleteDirectoryTestA DeleteDirectoryTest.cpp)
     target_link_libraries(DeleteDirectoryTestA PRIVATE DeleteDirectory)
     target_compile_definitions(DeleteDirectoryTestA PRIVATE -DMBCS -D_MBCS)
+    if (MSVC)
+        target_compile_options(DeleteDirectoryTestA PRIVATE /EHsc)
+    endif()
 
     # DeleteDirectoryTestW.exe
     add_executable(DeleteDirectoryTestW DeleteDirectoryTest.cpp)
     target_link_libraries(DeleteDirectoryTestW PRIVATE DeleteDirectory)
     target_compile_definitions(DeleteDirectoryTestW PRIVATE -DUNICODE -D_UNICODE)
+    if (MSVC)
+        target_compile_options(DeleteDirectoryTestW PRIVATE /EHsc)
+    endif()
 else()
     # libDeleteDirectoryA.a
     add_library(DeleteDirectoryA STATIC DeleteDirectory.c)
