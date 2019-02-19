@@ -3,7 +3,7 @@
 /* This file is public domain software. */
 
 #include "DeleteDirectory.h"
-#include <cstdio>
+#include <iostream>
 #include <cassert>
 #include <algorithm>    /* for std::sort */
 
@@ -38,7 +38,7 @@ int main(void)
 
     if (details)
     {
-        puts("Type Enter key");
+        std::cout << "Type Enter key" << std::endl;
         getchar();
     }
 
@@ -52,7 +52,7 @@ int main(void)
     {
         for (size_t i = 0; i < items.size(); ++i)
         {
-            printf("%d: %s\n", (int)i, items[i].c_str());
+            std::cout << i << ", " << items[i];
         }
     }
 #endif
@@ -72,7 +72,7 @@ int main(void)
     {
         for (size_t i = 0; i < paths.size(); ++i)
         {
-            printf("%d: %s\n", (int)i, paths[i].c_str());
+            std::cout << i << ", " << paths[i];
         }
     }
 #endif
@@ -96,11 +96,11 @@ int main(void)
 
     if (DeleteDirectory(TEXT("a1")))
     {
-        puts("success");
+        std::cout << "success" << std::endl;
     }
     else
     {
-        puts("failure");
+        std::cout << "failure" << std::endl;
         assert(0);
     }
 
