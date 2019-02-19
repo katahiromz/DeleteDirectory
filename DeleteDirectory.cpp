@@ -56,7 +56,7 @@ BOOL DirItemList(std::vector<tstring>& items, LPCTSTR dir)
     // end enumerating
     FindClose(hFind);
 
-    return TRUE;
+    return TRUE;    // success
 }
 
 /* get the directory list */
@@ -95,7 +95,7 @@ BOOL DirList(std::vector<tstring>& paths, LPCTSTR item)
         }
     }
 
-    return TRUE;
+    return TRUE;    // success
 }
 
 #ifdef __cplusplus
