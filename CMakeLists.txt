@@ -73,8 +73,6 @@ if (NO_STRSAFE)
     add_definitions(-DNO_STRSAFE)
 endif()
 
-add_definitions(-DNO_STRSAFE -pedantic -Wall -Weverything)
-
 if (USE_CXX)
     enable_language(CXX)
 
