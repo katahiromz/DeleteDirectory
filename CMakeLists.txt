@@ -80,15 +80,24 @@ if (USE_CXX)
     add_library(DeleteDirectoryA STATIC DeleteDirectory.cpp)
     target_compile_definitions(DeleteDirectoryA PRIVATE -DMBCS -D_MBCS)
     target_link_libraries(DeleteDirectoryA PRIVATE shlwapi)
+    if (MSVC)
+        target_compile_options(DeleteDirectoryA PRIVATE /EHsc)
+    endif()
 
     # libDeleteDirectoryW.a
     add_library(DeleteDirectoryW STATIC DeleteDirectory.cpp)
     target_compile_definitions(DeleteDirectoryW PRIVATE -DUNICODE -D_UNICODE)
     target_link_libraries(DeleteDirectoryW PRIVATE shlwapi)
+    if (MSVC)
+        target_compile_options(DeleteDirectoryW PRIVATE /EHsc)
+    endif()
 
     # libDeleteDirectory.a
     add_library(DeleteDirectory STATIC empty.c)
     target_link_libraries(DeleteDirectory PRIVATE DeleteDirectoryA DeleteDirectoryW)
+    if (MSVC)
+        target_compile_options(DeleteDirectory PRIVATE /EHsc)
+    endif()
 
     # DeleteDirectoryTestA.exe
     add_executable(DeleteDirectoryTestA DeleteDirectoryTest.cpp)
