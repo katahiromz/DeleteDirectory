@@ -41,26 +41,34 @@ BOOL WINAPI DirItemList(std::vector<tstring>& items, LPCTSTR dir)
         return FALSE;
     }
 
-    // for each item
-    do
+    BOOL bOK = TRUE;
+    try
     {
-        LPTSTR pch = find.cFileName;
-        if (pch[0] == TEXT('.') && 
-            (pch[1] == 0 || (pch[1] == TEXT('.') && pch[2] == 0)))
+        // for each item
+        do
         {
-            // "." or ".."
-        }
-        else
-        {
-            // add it
-            items.push_back(find.cFileName);
-        }
-    } while (FindNextFile(hFind, &find));   // go next
+            LPTSTR pch = find.cFileName;
+            if (pch[0] == TEXT('.') && 
+                (pch[1] == 0 || (pch[1] == TEXT('.') && pch[2] == 0)))
+            {
+                // "." or ".."
+            }
+            else
+            {
+                // add it
+                items.push_back(find.cFileName);
+            }
+        } while (FindNextFile(hFind, &find));   // go next
+    }
+    catch (...)
+    {
+        bOK = FALSE;
+    }
 
     // end enumerating
     FindClose(hFind);
 
-    return TRUE;    // success
+    return bOK;
 }
 
 /* get the directory list */
@@ -73,37 +81,45 @@ BOOL WINAPI DirList(std::vector<tstring>& paths, LPCTSTR item)
         return FALSE;
     }
 
-    size_t i = paths.size(), k;
-    paths.push_back(item);
-
-    tstring path;
-    TCHAR szPath[MAX_PATH];
-    for (; i < paths.size(); ++i)
+    BOOL bOK = TRUE;
+    try
     {
-        path = paths[i];
+        size_t i = paths.size(), k;
+        paths.push_back(item);
 
-        // not directory?
-        if (!PathIsDirectory(path.c_str()))
-            continue;
-
-        // get the items of the path
-        std::vector<tstring> items;
-        DirItemList(items, path.c_str());
-
-        // add the items with fixing as path
-        for (k = 0; k < items.size(); ++k)
+        tstring path;
+        TCHAR szPath[MAX_PATH];
+        for (; i < paths.size(); ++i)
         {
+            path = paths[i];
+
+            // not directory?
+            if (!PathIsDirectory(path.c_str()))
+                continue;
+
+            // get the items of the path
+            std::vector<tstring> items;
+            DirItemList(items, path.c_str());
+
+            // add the items with fixing as path
+            for (k = 0; k < items.size(); ++k)
+            {
 #ifdef NO_STRSAFE
-            lstrcpyn(szPath, path.c_str(), ARRAYSIZE(szPath));
+                lstrcpyn(szPath, path.c_str(), ARRAYSIZE(szPath));
 #else
-            StringCbCopy(szPath, sizeof(szPath), path.c_str());
+                StringCbCopy(szPath, sizeof(szPath), path.c_str());
 #endif
-            PathAppend(szPath, items[k].c_str());
-            paths.push_back(szPath);
+                PathAppend(szPath, items[k].c_str());
+                paths.push_back(szPath);
+            }
         }
     }
+    catch (...)
+    {
+        bOK = FALSE;
+    }
 
-    return TRUE;    // success
+    return bOK;
 }
 
 #ifdef __cplusplus
