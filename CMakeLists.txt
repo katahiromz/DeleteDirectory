@@ -73,6 +73,8 @@ if (NO_STRSAFE)
     add_definitions(-DNO_STRSAFE)
 endif()
 
+add_definitions(-DNO_STRSAFE -pedantic -Wall -Weverything)
+
 if (USE_CXX)
     enable_language(CXX)
 
@@ -92,12 +94,12 @@ if (USE_CXX)
 
     # DeleteDirectoryTestA.exe
     add_executable(DeleteDirectoryTestA DeleteDirectoryTest.cpp)
-    target_link_libraries(DeleteDirectoryTestA PRIVATE DeleteDirectoryA)
+    target_link_libraries(DeleteDirectoryTestA PRIVATE DeleteDirectory)
     target_compile_definitions(DeleteDirectoryTestA PRIVATE -DMBCS -D_MBCS)
 
     # DeleteDirectoryTestW.exe
     add_executable(DeleteDirectoryTestW DeleteDirectoryTest.cpp)
-    target_link_libraries(DeleteDirectoryTestW PRIVATE DeleteDirectoryW)
+    target_link_libraries(DeleteDirectoryTestW PRIVATE DeleteDirectory)
     target_compile_definitions(DeleteDirectoryTestW PRIVATE -DUNICODE -D_UNICODE)
 else()
     # libDeleteDirectoryA.a
@@ -116,12 +118,12 @@ else()
 
     # DeleteDirectoryTestA.exe
     add_executable(DeleteDirectoryTestA DeleteDirectoryTest.c)
-    target_link_libraries(DeleteDirectoryTestA PRIVATE DeleteDirectoryA)
+    target_link_libraries(DeleteDirectoryTestA PRIVATE DeleteDirectory)
     target_compile_definitions(DeleteDirectoryTestA PRIVATE -DMBCS -D_MBCS)
 
     # DeleteDirectoryTestW.exe
     add_executable(DeleteDirectoryTestW DeleteDirectoryTest.c)
-    target_link_libraries(DeleteDirectoryTestW PRIVATE DeleteDirectoryW)
+    target_link_libraries(DeleteDirectoryTestW PRIVATE DeleteDirectory)
     target_compile_definitions(DeleteDirectoryTestW PRIVATE -DUNICODE -D_UNICODE)
 endif()
 
