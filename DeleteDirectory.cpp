@@ -172,6 +172,8 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir) M_NOEXCEPT
     }
     catch (...)
     {
+        // maybe std::bad_alloc
+        assert(0);
         return FALSE;
     }
 
