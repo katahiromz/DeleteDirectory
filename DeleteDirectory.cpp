@@ -25,7 +25,11 @@ BOOL WINAPI DirItemList(std::vector<tstring>& items, LPCTSTR dir)
 {
     // create the wildcard specifier from dir
     TCHAR szPath[MAX_PATH];
+#ifdef NO_STRSAFE
+    lstrcpyn(szPath, dir, ARRAYSIZE(szPath));
+#else
     StringCbCopy(szPath, sizeof(szPath), dir);
+#endif
     PathAppend(szPath, TEXT("*"));
 
     // start enumerating
@@ -89,7 +93,11 @@ BOOL WINAPI DirList(std::vector<tstring>& paths, LPCTSTR item)
         // add the items with fixing as path
         for (k = 0; k < items.size(); ++k)
         {
+#ifdef NO_STRSAFE
+            lstrcpyn(szPath, path.c_str(), ARRAYSIZE(szPath));
+#else
             StringCbCopy(szPath, sizeof(szPath), path.c_str());
+#endif
             PathAppend(szPath, items[k].c_str());
             paths.push_back(szPath);
         }

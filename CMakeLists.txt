@@ -67,6 +67,11 @@ endif()
 ##############################################################################
 
 option(USE_CXX "Use C++" ON)
+option(NO_STRSAFE "Don't use <strsafe.h>" OFF)
+
+if (NO_STRSAFE)
+    add_definitions(-DNO_STRSAFE)
+endif()
 
 if (USE_CXX)
     enable_language(CXX)
