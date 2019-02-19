@@ -2,7 +2,7 @@
 /* Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.com>. */
 /* This file is public domain software. */
 #ifndef DELETE_DIRECTORY_H_
-#define DELETE_DIRECTORY_H_     10  /* Version 10 */
+#define DELETE_DIRECTORY_H_     11  /* Version 11 */
 
 #ifndef _INC_WINDOWS
     #include <windows.h>

@@ -139,6 +139,9 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
         // is it a directory?
         if (PathIsDirectory(psz))
         {
+            /* remove the read-only attribute */
+            SetFileAttributes(psz, FILE_ATTRIBUTE_DIRECTORY);
+
             // remove a directory
             if (!RemoveDirectory(psz))
             {
@@ -149,6 +152,9 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
         }
         else
         {
+            // remove the read-only attribute
+            SetFileAttributes(psz, FILE_ATTRIBUTE_NORMAL);
+
             // delete a file
             if (!DeleteFile(psz))
             {
