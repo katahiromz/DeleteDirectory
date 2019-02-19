@@ -1,7 +1,11 @@
+/* DeleteDirectoryTest.cpp --- Test for DeleteDirectory */
+/* Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.com>. */
+/* This file is public domain software. */
+
 #include "DeleteDirectory.h"
 #include <cstdio>
 #include <cassert>
-#include <algorithm>    // for std::sort
+#include <algorithm>    /* for std::sort */
 
 int main(void)
 {
