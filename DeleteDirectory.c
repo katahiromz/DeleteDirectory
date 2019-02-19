@@ -1,6 +1,6 @@
-// DeleteDirectory.c --- delete directory in C/C++
-// Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.com>.
-// This file is public domain software.
+/* DeleteDirectory.c --- delete directory in C/C++ */
+/* Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.com>. */
+/* This file is public domain software. */
 
 #include "DeleteDirectory.h"
 
@@ -45,7 +45,7 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
             if (pch[0] == TEXT('.') && 
                 (pch[1] == 0 || (pch[1] == TEXT('.') && pch[2] == 0)))
             {
-                // "." or ".."
+                /* "." or ".." */
             }
             else
             {
@@ -95,5 +95,5 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
 }
 
 #ifdef __cplusplus
-} // extern "C"
+} /* extern "C" */
 #endif

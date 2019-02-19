@@ -1,6 +1,6 @@
-// DeleteDirectory.h --- delete directory in C/C++
-// Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.com>.
-// This file is public domain software.
+/* DeleteDirectory.h --- delete directory in C/C++ */
+/* Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.com>. */
+/* This file is public domain software. */
 #ifndef DELETE_DIRECTORY_H_
 #define DELETE_DIRECTORY_H_     10  /* Version 10 */
 
@@ -27,7 +27,7 @@ BOOL WINAPI DeleteDirectoryA(LPCSTR dir);
 BOOL WINAPI DeleteDirectoryW(LPCWSTR dir);
 
 #ifdef __cplusplus
-} // extern "C"
+} /* extern "C" */
 #endif
 
 #ifdef __cplusplus
@@ -41,6 +41,6 @@ BOOL WINAPI DeleteDirectoryW(LPCWSTR dir);
     /* get the directory list */
     BOOL DirListA(std::vector<std::string>& paths, LPCSTR item);
     BOOL DirListW(std::vector<std::wstring>& paths, LPCWSTR item);
-#endif
+#endif  /* C++ */
 
 #endif  /* ndef DELETE_DIRECTORY_H_ */
