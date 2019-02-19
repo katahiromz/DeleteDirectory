@@ -108,10 +108,6 @@ BOOL WINAPI DirList(container_type& paths, LPCTSTR item)
     return TRUE;
 }
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* deletes a directory tree */
 BOOL WINAPI DeleteDirectory(LPCTSTR dir)
 {
@@ -170,7 +166,3 @@ BOOL WINAPI DeleteDirectory(LPCTSTR dir)
 
     return !PathFileExists(dir);
 }
-
-#ifdef __cplusplus
-} // extern "C"
-#endif
