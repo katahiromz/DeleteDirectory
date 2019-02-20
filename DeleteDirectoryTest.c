@@ -26,6 +26,8 @@ int main(void)
     fclose(fopen("a1/b2/c1/c1.txt", "wb"));
     fclose(fopen("a1/b2/c2/c2.txt", "wb"));
 
+    Sleep(500);
+
     if (DeleteDirectory(TEXT("a1")))
     {
         puts("success");
