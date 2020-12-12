@@ -1,10 +1,12 @@
 #pragma once
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int DeleteDirectoryLinux(const char *dir);
+bool DeleteDirectoryLinux(const char *pathname);
 
 #ifdef __cplusplus
 } // extern "C"
